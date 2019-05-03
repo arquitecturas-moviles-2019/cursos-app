@@ -3,6 +3,7 @@ package com.arquitecturasmoviles.asado;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -81,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Crear conexión al servicio REST
         mRestAdapter = new Retrofit.Builder()
-                .baseUrl("http://testing.nexoserver.com.ar/bootcampmobile")
+                .baseUrl("http://testing.nexoserver.com.ar/bootcampmobile/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -210,13 +211,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             loginCall.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                    Snackbar.make(mLoginFormView, response.toString(), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    /*TODO: save token*/
+                    Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
+                    startActivity(Cursos);
                 }
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+                    Snackbar.make(mLoginFormView, "ERROR", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
             });
         }
