@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.arquitecturasmoviles.asado.ui.main.SectionsPagerAdapter;
-import com.example.Curso;
-import com.example.Evento;
+import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.Evento;
 
 import java.util.ArrayList;
 

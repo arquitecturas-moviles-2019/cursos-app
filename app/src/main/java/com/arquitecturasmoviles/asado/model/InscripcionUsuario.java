@@ -1,4 +1,4 @@
-package com.example;
+package com.arquitecturasmoviles.asado.model;
 
 import java.util.HashMap;
 import java.util.Map;
