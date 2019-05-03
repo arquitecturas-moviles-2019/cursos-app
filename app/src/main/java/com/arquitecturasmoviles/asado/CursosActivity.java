@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 
+import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.Evento;
 import com.example.Curso;
 import com.example.Evento;
 
