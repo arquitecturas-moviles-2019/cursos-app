@@ -1,11 +1,12 @@
 package com.arquitecturasmoviles.asado;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import com.arquitecturasmoviles.asado.model.Curso;
 
 import java.util.ArrayList;
 
@@ -39,18 +40,18 @@ public class AdaptCurseListActivity extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            //convertView = LayoutInflater.from(context).inflate(R.layout.adapt_curse_list_activity, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.adapt_curse_list_activity, parent, false);
         }
 
         Curso currentCurse = (Curso) getItem(position);
 
-        /*TextView tv_nombreCurso = convertView.findViewById(R.id.tv_tituloAdaptadorCurso);
+        TextView tv_nombreCurso = convertView.findViewById(R.id.tv_tituloAdaptadorCurso);
         TextView tv_fecha = convertView.findViewById(R.id.tv_AdaptadorCursoFechaHora);
         TextView tv_lugar = convertView.findViewById(R.id.tv_adaptadorCursoLugar);
 
         tv_nombreCurso.setText(currentCurse.getNombre());
         tv_fecha.setText(currentCurse.getDiaHora());
-        tv_lugar.setText(this.lugar);*/
+        tv_lugar.setText(this.lugar);
 
         return convertView;
     }

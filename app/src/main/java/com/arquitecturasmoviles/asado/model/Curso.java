@@ -1,18 +1,21 @@
-package com.arquitecturasmoviles.asado.model;
+package com.arquitecturasmoviles.asado;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Curso {
+public class Curso{
 
     private String id;
     private String nombre;
+    public String KEY_NOMBRE = "KEY_COURSE_NAME";
     private String descripcion;
+    public String KEY_DESCRIPCION = "KEY_COURSE_DESCRIPTION";
     private String diaHora;
+    public String KEY_DIA_HORA = "KEY_COURSE_DIA_HORA";
     private String duracion;
     private String eventoId;
     private String disertante;
-    private Map<String, Object> additionalProperties = new HashMap<>();
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public String getId() {
         return id;
