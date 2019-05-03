@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.Curso;
+import com.arquitecturasmoviles.asado.model.Curso;
 
 import org.w3c.dom.Text;
 
