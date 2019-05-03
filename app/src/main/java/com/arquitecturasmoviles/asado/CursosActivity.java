@@ -19,9 +19,9 @@ public class CursosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_cursos);
+        //setContentView(R.layout.content_cursos);
 
-        listadoDondeSeVisualiza = findViewById(R.id.lv_cursos);
+        //listadoDondeSeVisualiza = findViewById(R.id.lv_cursos);
 
         Intent intencion = getIntent();
         Bundle extras = intencion.getExtras();
@@ -52,8 +52,8 @@ public class CursosActivity extends AppCompatActivity {
         listadoCursosDelEvento.add(curso3);
         //Fin hardcodeo
 
-        AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext());
-        listadoDondeSeVisualiza.setAdapter(adaptador);
+        //AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext());
+        //listadoDondeSeVisualiza.setAdapter(adaptador);
 
         listadoDondeSeVisualiza.setOnClickListener(new View.OnClickListener() {
             @Override
