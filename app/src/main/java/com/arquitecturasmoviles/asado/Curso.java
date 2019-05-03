@@ -1,9 +1,9 @@
-package com.example;
+package com.arquitecturasmoviles.asado;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Curso {
+public class Curso{
 
     private String id;
     private String nombre;

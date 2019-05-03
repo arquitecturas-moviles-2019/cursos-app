@@ -5,33 +5,36 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.Curso;
+
 import com.example.Evento;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class CursosActivity extends AppCompatActivity {
 
     ListView listadoDondeSeVisualiza;
+    Curso cursoAPasar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.content_cursos);
+        setContentView(R.layout.fragment_my_courses);
 
-        //listadoDondeSeVisualiza = findViewById(R.id.lv_cursos);
-
+        listadoDondeSeVisualiza = findViewById(R.id.myCoursesListView);
         Intent intencion = getIntent();
         Bundle extras = intencion.getExtras();
-        Evento evento = (Evento)extras.get("Evento");
-
+        //Evento evento = (Evento)extras.get("Evento");
+        Evento evento = new Evento();
+        evento.setLugar("utn");
         cargarCursosDelEvento(evento);
     }
 
     private void cargarCursosDelEvento(Evento evento){
-        ArrayList<Curso>listadoCursosDelEvento = new ArrayList<>();
+        final ArrayList<Curso>listadoCursosDelEvento = new ArrayList<>();
 
         String ubicacion = evento.getLugar();
 
@@ -52,13 +55,18 @@ public class CursosActivity extends AppCompatActivity {
         listadoCursosDelEvento.add(curso3);
         //Fin hardcodeo
 
-        //AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext());
-        //listadoDondeSeVisualiza.setAdapter(adaptador);
+        AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext(), evento.getLugar());
+        listadoDondeSeVisualiza.setAdapter(adaptador);
 
-        listadoDondeSeVisualiza.setOnClickListener(new View.OnClickListener() {
+        listadoDondeSeVisualiza.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                //Aca se construye la intencion para ir al curso seleccionado
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
+                Bundle bundle = new Bundle();
+                Curso selectedCourse = listadoCursosDelEvento.get(position);
+                bundle.putSerializable("CURSO", (Serializable) selectedCourse);
+
+
             }
         });
 
