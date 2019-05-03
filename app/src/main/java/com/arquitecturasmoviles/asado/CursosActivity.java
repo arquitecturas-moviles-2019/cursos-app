@@ -33,7 +33,7 @@ public class CursosActivity extends AppCompatActivity {
         cargarCursosDelEvento(evento);
     }
 
-    private void cargarCursosDelEvento(Evento evento){
+    private void cargarCursosDelEvento(final Evento evento){
         final ArrayList<Curso>listadoCursosDelEvento = new ArrayList<>();
 
         String ubicacion = evento.getLugar();
@@ -62,11 +62,17 @@ public class CursosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
-                Bundle bundle = new Bundle();
+
                 Curso selectedCourse = listadoCursosDelEvento.get(position);
-                bundle.putSerializable("CURSO", (Serializable) selectedCourse);
+
+                goToDetail.putExtra(selectedCourse.KEY_NOMBRE, selectedCourse.getNombre());
+                goToDetail.putExtra(selectedCourse.KEY_DESCRIPCION, selectedCourse.getDescripcion());
+                goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
 
 
+                goToDetail.putExtra(evento.KEY_LUGAR, evento.getLugar());
+
+                startActivity(goToDetail);
             }
         });
 
