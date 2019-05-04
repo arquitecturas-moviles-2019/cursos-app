@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.arquitecturasmoviles.asado.model.LoginBody;
 import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
+import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    private Retrofit mRestAdapter;
     private RemoteApi remoteApi;
 
     /**
@@ -82,12 +82,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
 
         // Crear conexión al servicio REST
-        mRestAdapter = new Retrofit.Builder()
-                .baseUrl("http://testing.nexoserver.com.ar/bootcampmobile/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        remoteApi = mRestAdapter.create(RemoteApi.class);
+        remoteApi = RetrofitClientInstance.getRetrofitInstance().create(RemoteApi.class);
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
