@@ -2,6 +2,7 @@ package com.arquitecturasmoviles.asado;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.arquitecturasmoviles.asado.model.Evento;
 import com.arquitecturasmoviles.asado.model.LoginBody;
 import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
+import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +40,7 @@ public class CursosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_my_courses);
 
-        // Crear conexión al servicio REST
-        mRestAdapter = new Retrofit.Builder()
-                .baseUrl("http://testing.nexoserver.com.ar/bootcampmobile/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        remoteApi = mRestAdapter.create(RemoteApi.class);
+        remoteApi = RetrofitClientInstance.getRetrofitInstance().create(RemoteApi.class);
 
         listadoDondeSeVisualiza = findViewById(R.id.myCoursesListView);
         Intent intencion = getIntent();
@@ -57,10 +53,11 @@ public class CursosActivity extends AppCompatActivity {
 
     private void cargarCursosDelEvento(final Evento evento){
 
-        Call<ArrayList<Curso>> allCoursesCall = remoteApi.getAllCourses();
-        allCoursesCall.enqueue(new Callback<ArrayList<Curso>>() {
+        Call<List<Curso>> allCoursesCall = remoteApi.getAllCourses();
+        allCoursesCall.enqueue(new Callback<List<Curso>>() {
             @Override
-            public void onResponse(Call<ArrayList<Curso>> call, Response<ArrayList<Curso>> response) {
+            public void onResponse(Call<List<Curso>> call, Response<List<Curso>> response) {
+                String asd = response.body().toString();
                 Snackbar.make(findViewById(R.id.myCoursesListView), "OK", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
@@ -71,7 +68,8 @@ public class CursosActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Curso>> call, Throwable t) {
+            public void onFailure(Call<List<Curso>> call, Throwable t) {
+                String asd = t.getMessage();
                 Snackbar.make(findViewById(R.id.myCoursesListView), "ERROR", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

@@ -79,6 +79,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
+        startActivity(Cursos);*/
+
         setContentView(R.layout.activity_login);
 
         // Crear conexión al servicio REST
@@ -209,6 +212,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     /*TODO: save token*/
+                    String asd = response.message();
                     Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
                     startActivity(Cursos);
                 }

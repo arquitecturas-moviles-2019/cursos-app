@@ -15,9 +15,9 @@ import retrofit2.http.POST;
 
 public interface RemoteApi {
 
-    @POST("/usuarios/login")
+    @POST("usuarios/login")
     Call<LoginResponse> login(@Body LoginBody loginBody);
 
-    @GET("/cursos/todos")
-    Call<ArrayList<Curso>> getAllCourses();
+    @GET("cursos/todos")
+    Call<List<Curso>> getAllCourses();
 }
