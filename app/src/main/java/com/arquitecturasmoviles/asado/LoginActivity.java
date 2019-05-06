@@ -79,6 +79,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*ntent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
+        startActivity(intent);*/
+
         /*Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
         startActivity(Cursos);*/
 
