@@ -9,7 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 
-import com.example.Evento;
+import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.Evento;
 
 import java.io.Serializable;
 import java.util.ArrayList;

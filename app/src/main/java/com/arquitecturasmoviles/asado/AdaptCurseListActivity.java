@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 
+import com.arquitecturasmoviles.asado.model.Curso;
+
 import java.util.ArrayList;
 
 public class AdaptCurseListActivity extends BaseAdapter {
