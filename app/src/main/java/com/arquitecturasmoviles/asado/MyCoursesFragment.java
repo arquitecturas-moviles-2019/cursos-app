@@ -1,6 +1,7 @@
 package com.arquitecturasmoviles.asado;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -36,17 +37,19 @@ public class MyCoursesFragment extends Fragment {
                 "MI CURSO 3"
         };
 
-        ListView lv = (ListView) view.findViewById(R.id.myCoursesListView);
+        ListView lv = view.findViewById(R.id.myCoursesListView);
 
-        ArrayAdapter<String> lva = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_list_item_1, myCorusesString
+        ArrayAdapter<String> lva = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, myCorusesString
         );
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Snackbar.make(view, "Se ha presionado el curso de la posición "+id, Snackbar.LENGTH_LONG)
-                        .show();
+//                Snackbar.make(view, "Se ha presionado el curso de la posición "+id, Snackbar.LENGTH_LONG)
+//                        .show();
+                Intent intent = new Intent(getContext(), CursosActivity.class);
+                intent.putExtra("COURSE_ID", 1);
+                startActivity(intent);
             }
         });
 
