@@ -48,7 +48,7 @@ public class MyCoursesFragment extends Fragment {
 //                Snackbar.make(view, "Se ha presionado el curso de la posición "+id, Snackbar.LENGTH_LONG)
 //                        .show();
                 Intent intent = new Intent(getContext(), CursosActivity.class);
-                intent.putExtra("COURSE_ID", 1);
+                intent.putExtra("COURSE_ID", position);
                 startActivity(intent);
             }
         });
