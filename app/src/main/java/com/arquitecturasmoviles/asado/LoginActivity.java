@@ -38,8 +38,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
+import com.arquitecturasmoviles.asado.model.LoginBody;
+import com.arquitecturasmoviles.asado.model.LoginResponse;
+import com.arquitecturasmoviles.asado.network.RemoteApi;
+import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -52,14 +64,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private RemoteApi remoteApi;
 
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+//    private static final String[] DUMMY_CREDENTIALS = new String[]{
+//            "foo@example.com:hello", "bar@example.com:world"
+//    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -77,9 +90,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*ntent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
+        startActivity(intent);*/
+
+        /*Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
+        startActivity(Cursos);*/
+
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+
+
+        // Crear conexión al servicio REST
+
+        remoteApi = RetrofitClientInstance.getRetrofitInstance().create(RemoteApi.class);
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -229,6 +254,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     });
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
+            loginCall.enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    /*TODO: save token*/
+                    String asd = response.message();
+                    Intent Cursos = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
+                    startActivity(Cursos);
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Snackbar.make(mLoginFormView, "ERROR", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
         }
     }
 
@@ -240,7 +281,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -363,13 +404,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
 
             // TODO: register the new account here.
             return true;
@@ -391,6 +432,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mProgressView != null) {
             showProgress(false);
         }
     }

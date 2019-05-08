@@ -1,4 +1,4 @@
-package com.example;
+package com.arquitecturasmoviles.asado.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,7 @@ public class Evento {
     private String fechaFin;
     private String descripcion;
     private String lugar;
+    public String KEY_LUGAR = "KEY_EVENTO_LUGAR";
     private String nombre;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

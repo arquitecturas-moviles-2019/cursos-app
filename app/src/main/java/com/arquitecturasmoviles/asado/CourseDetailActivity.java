@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.Curso;
+import com.arquitecturasmoviles.asado.model.*;
 
 import org.w3c.dom.Text;
 
@@ -23,16 +22,13 @@ public class CourseDetailActivity extends AppCompatActivity {
         TextView locationTextView = (TextView)this.findViewById(R.id.locationLabel);
         TextView descriptionTextView = (TextView)this.findViewById(R.id.descriptionLabel);
 
-        //Curso curso = (Curso) getIntent().getExtras().getSerializable("CURSO");
-
-        /*HARDCODE - DELETE WHEN RECEIVING CORRECT OBJECT*/
         Curso curso = new Curso();
-        curso.setDiaHora("15:30 20/01/1997");
-        curso.setDescripcion("Esta es una descripcion hardcodeada");
+        curso.setDiaHora(getIntent().getStringExtra(curso.KEY_DIA_HORA));
+        curso.setDescripcion(getIntent().getStringExtra(curso.KEY_DESCRIPCION));
 
         //Set Textview's values
         dateTextView.setText(curso.getDiaHora());
-        locationTextView.setText("Ubicacion por defecto");
+        locationTextView.setText(getIntent().getStringExtra(new Evento().KEY_LUGAR));
         descriptionTextView.setText(curso.getDescripcion());
 
         final Button inscribeButton = (Button) findViewById(R.id.inscribeButton);
