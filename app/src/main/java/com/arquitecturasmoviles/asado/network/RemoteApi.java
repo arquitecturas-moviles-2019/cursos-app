@@ -3,6 +3,9 @@ package com.arquitecturasmoviles.asado.network;
 import android.util.Log;
 
 import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.InscripcionesResponse;
+import com.arquitecturasmoviles.asado.model.LocalidadesResponse;
+import com.arquitecturasmoviles.asado.model.CursosResponse;
 import com.arquitecturasmoviles.asado.model.LoginBody;
 import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.model.RegisterBody;
@@ -33,5 +36,5 @@ public interface RemoteApi {
                                     @Field("contraseniaConfirmacion") String contraseniaConfirmacion);
 
     @GET("cursos/todos")
-    Call<List<Curso>> getAllCourses();
+    Call<CursosResponse> getAllCourses();
 }
