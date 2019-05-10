@@ -1,8 +1,8 @@
 package com.arquitecturasmoviles.asado;
 
-
 import com.arquitecturasmoviles.asado.TestsUtilities.RemoteApiTest;
-import com.arquitecturasmoviles.asado.model.Evento;
+import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.network.RemoteApi;
 import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
 
 import org.junit.Before;
@@ -17,7 +17,7 @@ import retrofit2.Response;
 
 import static org.junit.Assert.assertEquals;
 
-public class EventsTest {
+public class CoursesTest {
     //    private static RemoteApi remoteApi;
     private static RemoteApiTest remoteApiTest;
     private boolean testSuccess;
@@ -37,11 +37,11 @@ public class EventsTest {
     }
 
     @Test
-    public void testGetAllEventsService() throws InterruptedException {
-        Call<Evento> eventsCall = remoteApiTest.getAllEvents();
-        eventsCall.enqueue(new Callback<Evento>() {
+    public void testGetAllCoursesService() throws InterruptedException {
+        Call<Curso> courseCall = remoteApiTest.getAllCourses();
+        courseCall.enqueue(new Callback<Curso>() {
             @Override
-            public void onResponse(Call<Evento> call, Response<Evento> response) {
+            public void onResponse(Call<Curso> call, Response<Curso> response) {
                 if (response.code() == 200) {
                     testSuccess = true;
                 } else {
@@ -51,11 +51,10 @@ public class EventsTest {
             }
 
             @Override
-            public void onFailure(Call<Evento> call, Throwable t) {
+            public void onFailure(Call<Curso> call, Throwable t) {
                 testSuccess = false;
                 countDownLatch.countDown();
             }
-
         });
         countDownLatch.await();
         assertEquals(true, testSuccess);
