@@ -30,6 +30,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import com.arquitecturasmoviles.asado.model.RegisterBody;
 import com.arquitecturasmoviles.asado.model.RegisterResponse;
@@ -71,6 +76,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * Keep track of the login task to ensure we can cancel it if requested.
      */
 
+    // Initialize Firebase Auth
+    private FirebaseAuth mAuth;
 
     // UI references.
     private EditText mNameView;
@@ -86,6 +93,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_register);
+
+        mAuth = FirebaseAuth.getInstance();
 
         // Crear conexión al servicio REST
         mRestAdapter = new Retrofit.Builder()
@@ -138,6 +147,16 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mProgressView = findViewById(R.id.register_progress);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null).
+        if (mAuth.getCurrentUser() != null){
+            finish();
+            logIn();
+        }
+    }
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -188,14 +207,31 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign up success
+                                Toast.makeText(RegisterActivity.this, "Authentication successfully.",
+                                        Toast.LENGTH_SHORT).show();
+                                finish();
+                                logIn();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
             final RegisterBody registerBody = new RegisterBody(name, surname, email, password, passwordConfirm);
             remoteApi.register(registerBody.getNombre(), registerBody.getApellido(), registerBody.getEmail(), registerBody.getContrasenia(), registerBody.getContraseniaConfirmacion()).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                     /*TODO: save token*/
                     if (response.body().getError().toString() != "true"){
-                        Intent Login = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(Login);
+                        goToLogIn();
                     }
                     else{
                         Snackbar.make(mRegisterFormView, "ERROR", Snackbar.LENGTH_LONG)
@@ -211,6 +247,19 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             });
         }
     }
+
+    private void goToLogIn(){
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void logIn(){
+        Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return true;
