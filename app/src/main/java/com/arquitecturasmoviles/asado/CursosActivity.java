@@ -17,6 +17,10 @@ import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
 import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
 
+import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.Evento;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

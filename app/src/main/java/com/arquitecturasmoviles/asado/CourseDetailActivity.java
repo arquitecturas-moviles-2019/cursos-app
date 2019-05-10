@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.arquitecturasmoviles.asado.model.*;
 
+import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.Evento;
+
 import org.w3c.dom.Text;
 
 public class CourseDetailActivity extends AppCompatActivity {
