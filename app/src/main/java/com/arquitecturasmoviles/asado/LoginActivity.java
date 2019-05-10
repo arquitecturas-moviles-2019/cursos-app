@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -179,6 +181,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    private void storeKeyValueOnSharedPreferences(String key, String value){
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = myPrefs.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -231,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             loginCall.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                    /*TODO: save token*/
+                    storeKeyValueOnSharedPreferences("UserToken", response.body().getToken());
                     Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
                     startActivity(Cursos);
                 }
