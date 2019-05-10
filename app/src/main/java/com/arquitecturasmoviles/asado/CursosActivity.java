@@ -12,12 +12,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.CursosResponse;
 import com.arquitecturasmoviles.asado.model.Evento;
 import com.arquitecturasmoviles.asado.model.LoginBody;
 import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
 import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
 
+import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.Evento;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,28 +66,24 @@ public class CursosActivity extends AppCompatActivity {
 
     private void cargarCursosDelEvento(){
 
-        Call<List<Curso>> allCoursesCall = remoteApi.getAllCourses();
-        allCoursesCall.enqueue(new Callback<List<Curso>>() {
+        Call<CursosResponse> allCoursesCall = remoteApi.getAllCourses();
+        allCoursesCall.enqueue(new Callback<CursosResponse>() {
             @Override
-            public void onResponse(Call<List<Curso>> call, Response<List<Curso>> response) {
-                String asd = response.body().toString();
+            public void onResponse(Call<CursosResponse> call, Response<CursosResponse> response) {
                 Snackbar.make(findViewById(R.id.myCoursesListView), "OK", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                for (Curso curso:
-                     response.body()) {
-                    listadoCursosDelEvento.add(curso);
-                }
-            }
+                listadoCursosDelEvento = response.body().getCursos();
 
-            @Override
-            public void onFailure(Call<List<Curso>> call, Throwable t) {
-                String asd = t.getMessage();
-                Snackbar.make(findViewById(R.id.myCoursesListView), "ERROR", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+                AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext(), evento.getLugar());
+                listadoDondeSeVisualiza.setAdapter(adaptador);
+                listadoDondeSeVisualiza.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
 
+
+                      
 
 
         //Sentecia para obtener los cursos
@@ -188,16 +189,32 @@ public class CursosActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
 
-                Curso selectedCourse = listadoCursosDelEvento.get(position);
+              
+                        Curso selectedCourse = listadoCursosDelEvento.get(position);
 
-                goToDetail.putExtra(selectedCourse.KEY_NOMBRE, selectedCourse.getNombre());
-                goToDetail.putExtra(selectedCourse.KEY_DESCRIPCION, selectedCourse.getDescripcion());
-                goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
+              
+
+                        goToDetail.putExtra(selectedCourse.KEY_ID, selectedCourse.getId());
+                        goToDetail.putExtra(selectedCourse.KEY_NOMBRE, selectedCourse.getNombre());
+                        goToDetail.putExtra(selectedCourse.KEY_DESCRIPCION, selectedCourse.getDescripcion());
+                        goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
+
+                        goToDetail.putExtra(evento.KEY_LUGAR, evento.getLugar());
+
+                        startActivity(goToDetail);
+                    }
+                });
 
 
                 goToDetail.putExtra("KEY_EVENTO_LUGAR", ubicacion);
 
-                startActivity(goToDetail);
+            }
+
+
+            @Override
+            public void onFailure(Call<CursosResponse> call, Throwable t) {
+                Snackbar.make(findViewById(R.id.myCoursesListView), "ERROR", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 

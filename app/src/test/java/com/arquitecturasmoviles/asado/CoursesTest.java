@@ -38,8 +38,8 @@ public class CoursesTest {
 
     @Test
     public void testGetAllCoursesService() throws InterruptedException {
-        Call<Curso> inscriptionCall = remoteApiTest.getAllCourses();
-        inscriptionCall.enqueue(new Callback<Curso>() {
+        Call<Curso> courseCall = remoteApiTest.getAllCourses();
+        courseCall.enqueue(new Callback<Curso>() {
             @Override
             public void onResponse(Call<Curso> call, Response<Curso> response) {
                 if (response.code() == 200) {
