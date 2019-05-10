@@ -99,38 +99,38 @@ public class LoginTest {
         assertEquals(true, testSuccess);
     }
 
-    @Test
-    public void testUserLoginToken() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
-        loginCall.enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        LoginResponse responseBody = response.body();
-                        String token = responseBody.getToken();
-                        if (token.length() != 0) {
-                            testSuccess = true;
-                        }else {
-                            testSuccess = false;
-                        }
-                    } catch (Exception e) {
-                        testSuccess = false;
-                    }
-                } else {
-                    testSuccess = false;
-                }
-                countDownLatch.countDown();
-            }
-
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                testSuccess = false;
-                countDownLatch.countDown();
-            }
-
-        });
-        countDownLatch.await();
-        assertEquals(true, testSuccess);
-    }
+//    @Test
+//    public void testUserLoginToken() throws InterruptedException {
+//        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
+//        loginCall.enqueue(new Callback<LoginResponse>() {
+//            @Override
+//            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+//                if (response.code() == 200) {
+//                    try {
+//                        LoginResponse responseBody = response.body();
+//                        String token = responseBody.getToken();
+//                        if (token.length() != 0) {
+//                            testSuccess = true;
+//                        }else {
+//                            testSuccess = false;
+//                        }
+//                    } catch (Exception e) {
+//                        testSuccess = false;
+//                    }
+//                } else {
+//                    testSuccess = false;
+//                }
+//                countDownLatch.countDown();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<LoginResponse> call, Throwable t) {
+//                testSuccess = false;
+//                countDownLatch.countDown();
+//            }
+//
+//        });
+//        countDownLatch.await();
+//        assertEquals(true, testSuccess);
+//    }
 }
