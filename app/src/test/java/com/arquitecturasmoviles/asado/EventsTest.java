@@ -1,8 +1,8 @@
 package com.arquitecturasmoviles.asado;
 
 
-import com.arquitecturasmoviles.asado.TestsUtilities.EventosResponse;
 import com.arquitecturasmoviles.asado.TestsUtilities.RemoteApiTest;
+import com.arquitecturasmoviles.asado.model.Evento;
 import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
 
 import org.junit.Before;
@@ -38,10 +38,10 @@ public class EventsTest {
 
     @Test
     public void testGetAllEventsService() throws InterruptedException {
-        Call<EventosResponse> eventsCall = remoteApiTest.getAllEvents();
-        eventsCall.enqueue(new Callback<EventosResponse>() {
+        Call<Evento> eventsCall = remoteApiTest.getAllEvents();
+        eventsCall.enqueue(new Callback<Evento>() {
             @Override
-            public void onResponse(Call<EventosResponse> call, Response<EventosResponse> response) {
+            public void onResponse(Call<Evento> call, Response<Evento> response) {
                 if (response.code() == 200) {
                     testSuccess = true;
                 } else {
@@ -51,7 +51,7 @@ public class EventsTest {
             }
 
             @Override
-            public void onFailure(Call<EventosResponse> call, Throwable t) {
+            public void onFailure(Call<Evento> call, Throwable t) {
                 testSuccess = false;
                 countDownLatch.countDown();
             }
