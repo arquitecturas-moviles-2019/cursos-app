@@ -33,6 +33,7 @@ public class CursosActivity extends AppCompatActivity {
     Curso cursoAPasar;
     ArrayList<Curso> listadoCursosDelEvento = new ArrayList<>();
     String idEvento;
+    String ubicacion;
 
     private Retrofit mRestAdapter;
     private RemoteApi remoteApi;
@@ -44,21 +45,21 @@ public class CursosActivity extends AppCompatActivity {
 
         remoteApi = RetrofitClientInstance.getRetrofitInstance().create(RemoteApi.class);
 
-        int courseId = getIntent().getIntExtra("COURSE_ID", 0);
+        //int courseId = getIntent().getIntExtra("COURSE_ID", 0);
 
-        Toast.makeText(this, "El id del curso es: " + courseId, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "El id del curso es: " + courseId, Toast.LENGTH_LONG).show();
 
         listadoDondeSeVisualiza = findViewById(R.id.myCoursesListView);
         Intent intencion = getIntent();
         Bundle extras = intencion.getExtras();
         //Evento evento = (Evento)extras.get("Evento");
-        idEvento = extras.getString("idEvento");
-        Evento evento = new Evento();
-        evento.setLugar("utn");
-        cargarCursosDelEvento(evento);
+        idEvento = getIntent().getStringExtra("idEvento");
+        //Evento evento = new Evento();
+        //evento.setLugar("utn");
+        cargarCursosDelEvento();
     }
 
-    private void cargarCursosDelEvento(final Evento evento){
+    private void cargarCursosDelEvento(){
 
         Call<List<Curso>> allCoursesCall = remoteApi.getAllCourses();
         allCoursesCall.enqueue(new Callback<List<Curso>>() {
@@ -82,7 +83,7 @@ public class CursosActivity extends AppCompatActivity {
             }
         });
 
-        String ubicacion = evento.getLugar();
+
 
         //Sentecia para obtener los cursos
         //Por ahora hardcodeo - Inicio hardcodeo
@@ -97,6 +98,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Express");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional San Francisco";
                 break;
             case "1":
                 curso1.setNombre("Curso de Vue.js");
@@ -105,6 +107,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Laravel from Scratch");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional San Francisco";
                 break;
             case "2":
                 curso1.setNombre("Curso de Node.js");
@@ -113,6 +116,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de PHP 7");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional Santa Fe";
                 break;
             case "3":
                 curso1.setNombre("Curso de MariaDB");
@@ -121,6 +125,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Android desde 0");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional Cordoba";
                 break;
             case "4":
                 curso1.setNombre("Curso de IOs desde 0");
@@ -129,6 +134,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Queues en Js");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional Esperanza";
                 break;
             case "5":
                 curso1.setNombre("Curso de trabajos asincrónicos");
@@ -137,6 +143,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Juegos en Unity");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional San Francisco";
                 break;
             case "6":
                 curso1.setNombre("Curso de TDD");
@@ -145,6 +152,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Simphony");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional San Francisco";
                 break;
             case "7":
                 curso1.setNombre("Curso de BlockChain");
@@ -153,6 +161,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Ruby");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional Buenos Aires";
                 break;
             case "8":
                 curso1.setNombre("Curso de GO");
@@ -161,6 +170,7 @@ public class CursosActivity extends AppCompatActivity {
                 curso2.setDiaHora("22/5/19");
                 curso3.setNombre("Curso de Sistemas expertos");
                 curso3.setDiaHora("12/6/19");
+                ubicacion = "UTN - Facultad Regional San Francisco";
                 break;
         }
 
@@ -170,7 +180,7 @@ public class CursosActivity extends AppCompatActivity {
         listadoCursosDelEvento.add(curso3);
         //Fin hardcodeo
 
-        AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext(), evento.getLugar());
+        AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext(), ubicacion);
         listadoDondeSeVisualiza.setAdapter(adaptador);
 
         listadoDondeSeVisualiza.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -185,7 +195,7 @@ public class CursosActivity extends AppCompatActivity {
                 goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
 
 
-                goToDetail.putExtra(evento.KEY_LUGAR, evento.getLugar());
+                goToDetail.putExtra("KEY_EVENTO_LUGAR", ubicacion);
 
                 startActivity(goToDetail);
             }
