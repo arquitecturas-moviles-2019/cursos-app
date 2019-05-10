@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.arquitecturasmoviles.asado.model.*;
 
 import com.arquitecturasmoviles.asado.model.Curso;
 import com.arquitecturasmoviles.asado.model.Evento;
@@ -20,15 +21,19 @@ public class CourseDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_course_detail);
 
         //Get TextView's
+        TextView nameTextView = (TextView)this.findViewById(R.id.nameLabel);
         TextView dateTextView = (TextView)this.findViewById(R.id.dateLabel);
         TextView locationTextView = (TextView)this.findViewById(R.id.locationLabel);
         TextView descriptionTextView = (TextView)this.findViewById(R.id.descriptionLabel);
 
         Curso curso = new Curso();
+        curso.setNombre(getIntent().getStringExtra(curso.KEY_NOMBRE));
         curso.setDiaHora(getIntent().getStringExtra(curso.KEY_DIA_HORA));
         curso.setDescripcion(getIntent().getStringExtra(curso.KEY_DESCRIPCION));
+        int courseId = getIntent().getIntExtra(curso.KEY_ID, 0);
 
         //Set Textview's values
+        nameTextView.setText(curso.getNombre());
         dateTextView.setText(curso.getDiaHora());
         locationTextView.setText(getIntent().getStringExtra(new Evento().KEY_LUGAR));
         descriptionTextView.setText(curso.getDescripcion());
