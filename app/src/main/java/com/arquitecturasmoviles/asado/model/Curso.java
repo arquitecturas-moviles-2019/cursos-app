@@ -1,19 +1,29 @@
 package com.arquitecturasmoviles.asado.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Curso{
 
     private String id;
+    public String KEY_ID = "KEY_COURSE_ID";
+
     private String nombre;
     public String KEY_NOMBRE = "KEY_COURSE_NAME";
+
     private String descripcion;
     public String KEY_DESCRIPCION = "KEY_COURSE_DESCRIPTION";
+
+    @SerializedName("dia_hora")
     private String diaHora;
     public String KEY_DIA_HORA = "KEY_COURSE_DIA_HORA";
+
     private String duracion;
+
     private String eventoId;
+
     private String disertante;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

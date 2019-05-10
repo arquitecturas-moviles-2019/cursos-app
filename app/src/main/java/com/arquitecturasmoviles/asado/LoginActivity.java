@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     /*TODO: save token*/
-                    String asd = response.message();
+                    String asd = response.body().toString();
                     Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
                     startActivity(Cursos);
                 }

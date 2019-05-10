@@ -1,6 +1,7 @@
 package com.arquitecturasmoviles.asado.network;
 
 import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.CursosResponse;
 import com.arquitecturasmoviles.asado.model.LoginBody;
 import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.model.User;
@@ -19,5 +20,5 @@ public interface RemoteApi {
     Call<LoginResponse> login(@Body LoginBody loginBody);
 
     @GET("cursos/todos")
-    Call<List<Curso>> getAllCourses();
+    Call<CursosResponse> getAllCourses();
 }
