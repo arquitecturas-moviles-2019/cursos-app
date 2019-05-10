@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import com.arquitecturasmoviles.asado.model.RegisterBody;
 import com.arquitecturasmoviles.asado.model.RegisterResponse;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -67,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+
 
     // UI references.
     private EditText mNameView;
@@ -92,13 +95,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
         remoteApi = mRestAdapter.create(RemoteApi.class);
 
-        // Set up the login form.
+        // Set up the register form.
         mNameView = (EditText) findViewById(R.id.name);
 
         mSurnameView = (EditText) findViewById(R.id.surname);
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -136,59 +138,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mProgressView = findViewById(R.id.register_progress);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
-
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegister() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mNameView.setError(null);
@@ -233,13 +188,19 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            Call<RegisterResponse> registerCall = remoteApi.register(new RegisterBody(name, surname, email, password, passwordConfirm));
-            registerCall.enqueue(new Callback<RegisterResponse>() {
+            final RegisterBody registerBody = new RegisterBody(name, surname, email, password, passwordConfirm);
+            remoteApi.register(registerBody.getNombre(), registerBody.getApellido(), registerBody.getEmail(), registerBody.getContrasenia(), registerBody.getContraseniaConfirmacion()).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                     /*TODO: save token*/
-                    Intent Login = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(Login);
+                    if (response.body().getError().toString() != "true"){
+                        Intent Login = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(Login);
+                    }
+                    else{
+                        Snackbar.make(mRegisterFormView, "ERROR", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
                 }
 
                 @Override
@@ -350,61 +311,5 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView.setAdapter(adapter);
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mEmail)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 }
 

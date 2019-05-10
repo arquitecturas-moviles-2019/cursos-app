@@ -1,14 +1,21 @@
 package com.arquitecturasmoviles.asado.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterBody {
 
+    @SerializedName("nombre")
     private String nombre;
+    @SerializedName("apellido")
     private String apellido;
+    @SerializedName("email")
     private String email;
+    @SerializedName("contrasenia")
     private String contrasenia;
+    @SerializedName("contraseniaConfirmacion")
     private String contraseniaConfirmacion;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
