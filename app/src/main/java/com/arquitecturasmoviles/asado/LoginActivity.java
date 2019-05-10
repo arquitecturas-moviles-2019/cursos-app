@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,10 +32,19 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 import com.arquitecturasmoviles.asado.model.LoginBody;
 import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
+import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +66,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    private Retrofit mRestAdapter;
     private RemoteApi remoteApi;
 
     /**
@@ -77,25 +86,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    // Initialize Firebase Auth
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //test
 
-        Intent test = new Intent(getApplicationContext(), CursosActivity.class);
-        startActivity(test);
+        /*ntent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
+        startActivity(intent);*/
 
-        //fin test
+        /*Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
+        startActivity(Cursos);*/
 
         setContentView(R.layout.activity_login);
 
-        // Crear conexión al servicio REST
-        mRestAdapter = new Retrofit.Builder()
-                .baseUrl("http://testing.nexoserver.com.ar/bootcampmobile/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        mAuth = FirebaseAuth.getInstance();
 
-        remoteApi = mRestAdapter.create(RemoteApi.class);
+
+        // Crear conexión al servicio REST
+
+        remoteApi = RetrofitClientInstance.getRetrofitInstance().create(RemoteApi.class);
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -120,12 +131,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
-
         Button mRegisterButton = (Button) findViewById(R.id.register_button);
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
-                changeToRegisterView();
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -133,9 +144,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void changeToRegisterView(){
-        Intent Register = new Intent(getApplicationContext(), RegisterActivity.class);
-        startActivity(Register);
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null).
+        if (mAuth.getCurrentUser() != null){
+            finish();
+            logIn();
+        }
     }
 
     private void populateAutoComplete() {
@@ -236,12 +252,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success.
+                                finish();
+                                logIn();
+                                Toast.makeText(LoginActivity.this, "Authentication successfully.",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
             Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
             loginCall.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+
                     storeKeyValueOnSharedPreferences("UserToken", response.body().getToken());
                     Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
+
                     startActivity(Cursos);
                 }
 
@@ -253,6 +290,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             });
         }
     }
+
+    private void logIn(){
+        Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return true;
@@ -406,6 +450,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mProgressView != null) {
             showProgress(false);
         }
     }
