@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -46,6 +47,10 @@ public class AdaptCurseListActivity extends BaseAdapter {
         }
 
         Curso currentCurse = (Curso) getItem(position);
+
+        ImageView iv_calendar = convertView.findViewById(R.id.iv_calendar);
+        ImageView iv_location = convertView.findViewById(R.id.iv_location);
+
 
         TextView tv_nombreCurso = convertView.findViewById(R.id.tv_tituloAdaptadorCurso);
         TextView tv_fecha = convertView.findViewById(R.id.tv_AdaptadorCursoFechaHora);

@@ -32,6 +32,7 @@ public class CursosActivity extends AppCompatActivity {
     ListView listadoDondeSeVisualiza;
     Curso cursoAPasar;
     ArrayList<Curso> listadoCursosDelEvento = new ArrayList<>();
+    String idEvento;
 
     private Retrofit mRestAdapter;
     private RemoteApi remoteApi;
@@ -51,6 +52,7 @@ public class CursosActivity extends AppCompatActivity {
         Intent intencion = getIntent();
         Bundle extras = intencion.getExtras();
         //Evento evento = (Evento)extras.get("Evento");
+        idEvento = extras.getString("idEvento");
         Evento evento = new Evento();
         evento.setLugar("utn");
         cargarCursosDelEvento(evento);
@@ -85,14 +87,83 @@ public class CursosActivity extends AppCompatActivity {
         //Sentecia para obtener los cursos
         //Por ahora hardcodeo - Inicio hardcodeo
         Curso curso1 = new Curso();
-        curso1.setNombre("curso1");
-        curso1.setDiaHora("1/5/19");
         Curso curso2 = new Curso();
-        curso2.setNombre("curso2");
-        curso2.setDiaHora("2/6/19");
         Curso curso3 = new Curso();
-        curso3.setNombre("curso3");
-        curso3.setDiaHora("3/7/19");
+        switch (idEvento){
+            case "0":
+                curso1.setNombre("Curso de React");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de MongoDB");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Express");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "1":
+                curso1.setNombre("Curso de Vue.js");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de Redis");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Laravel from Scratch");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "2":
+                curso1.setNombre("Curso de Node.js");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de HTML 5");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de PHP 7");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "3":
+                curso1.setNombre("Curso de MariaDB");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de Seguridad Informatica");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Android desde 0");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "4":
+                curso1.setNombre("Curso de IOs desde 0");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de IOs Avanzado");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Queues en Js");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "5":
+                curso1.setNombre("Curso de trabajos asincrónicos");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de Modelado 3D");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Juegos en Unity");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "6":
+                curso1.setNombre("Curso de TDD");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de Travis");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Simphony");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "7":
+                curso1.setNombre("Curso de BlockChain");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de PostMan");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Ruby");
+                curso3.setDiaHora("12/6/19");
+                break;
+            case "8":
+                curso1.setNombre("Curso de GO");
+                curso1.setDiaHora("1/5/19");
+                curso2.setNombre("Curso de Inteligencia Artificial");
+                curso2.setDiaHora("22/5/19");
+                curso3.setNombre("Curso de Sistemas expertos");
+                curso3.setDiaHora("12/6/19");
+                break;
+        }
+
 
         listadoCursosDelEvento.add(curso1);
         listadoCursosDelEvento.add(curso2);

@@ -1,6 +1,7 @@
 package com.arquitecturasmoviles.asado;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -48,6 +49,10 @@ public class EventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Snackbar.make(view, "Se ha presionado el evento de la posición: "+position, Snackbar.LENGTH_LONG)
                         .show();
+
+                Intent goToCourse = new Intent(getContext(), CursosActivity.class);
+                goToCourse.putExtra("idEvento", position);
+                startActivity(goToCourse);
             }
         });
 
