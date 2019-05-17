@@ -54,11 +54,11 @@ public class AdaptCurseListActivity extends BaseAdapter {
 
         TextView tv_nombreCurso = convertView.findViewById(R.id.tv_tituloAdaptadorCurso);
         TextView tv_fecha = convertView.findViewById(R.id.tv_AdaptadorCursoFechaHora);
-        TextView tv_lugar = convertView.findViewById(R.id.tv_adaptadorCursoLugar);
+        TextView tv_descripcion = convertView.findViewById(R.id.tv_adaptadorCursoLugar);
 
         tv_nombreCurso.setText(currentCurse.getNombre());
         tv_fecha.setText(currentCurse.getDiaHora());
-        tv_lugar.setText(this.lugar);
+        tv_descripcion.setText(currentCurse.getDescripcion());
 
         return convertView;
     }

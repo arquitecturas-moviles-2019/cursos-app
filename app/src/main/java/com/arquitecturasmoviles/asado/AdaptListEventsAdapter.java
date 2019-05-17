@@ -51,11 +51,11 @@ public class AdaptListEventsAdapter extends BaseAdapter {
 
 
         TextView tv_nombreEvento = convertView.findViewById(R.id.tv_tituloAdaptadorCurso);
-        TextView tv_fecha = convertView.findViewById(R.id.tv_AdaptadorCursoFechaHora);
+        TextView tv_descripcion = convertView.findViewById(R.id.tv_AdaptadorCursoFechaHora);
         TextView tv_lugar = convertView.findViewById(R.id.tv_adaptadorCursoLugar);
 
         tv_nombreEvento.setText(currentEvent.getNombre());
-        //tv_fecha.setText(currentEvent.getDiaHora());
+        tv_descripcion.setText(currentEvent.getDescripcion());
         tv_lugar.setText(currentEvent.getLugar());
 
         return convertView;
