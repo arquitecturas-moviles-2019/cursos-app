@@ -64,6 +64,7 @@ public class EventsFragment extends Fragment {
                         Evento selectedEvent = listadoDeEventos.get(position);
 
                         goToCourses.putExtra(selectedEvent.KEY_ID, selectedEvent.getId());
+                        goToCourses.putExtra(selectedEvent.KEY_LUGAR, selectedEvent.getLugar());
 
                         startActivity(goToCourses);
                     }
