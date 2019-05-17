@@ -64,32 +64,16 @@ public class CursosActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
 
+                        Curso selectedCourse = listadoCursosDelEvento.get(position);
 
-                        AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext(), ubicacion);
-                        listadoDondeSeVisualiza.setAdapter(adaptador);
+                        goToDetail.putExtra(selectedCourse.KEY_ID, selectedCourse.getId());
+                        goToDetail.putExtra(selectedCourse.KEY_NOMBRE, selectedCourse.getNombre());
+                        goToDetail.putExtra(selectedCourse.KEY_DESCRIPCION, selectedCourse.getDescripcion());
+                        goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
 
-                        listadoDondeSeVisualiza.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
+                        goToDetail.putExtra(evento.KEY_LUGAR, evento.getLugar());
 
-
-                                Curso selectedCourse = listadoCursosDelEvento.get(position);
-
-
-                                goToDetail.putExtra(selectedCourse.KEY_ID, selectedCourse.getId());
-                                goToDetail.putExtra(selectedCourse.KEY_NOMBRE, selectedCourse.getNombre());
-                                goToDetail.putExtra(selectedCourse.KEY_DESCRIPCION, selectedCourse.getDescripcion());
-                                goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
-
-                                goToDetail.putExtra(evento.KEY_LUGAR, evento.getLugar());
-
-                                startActivity(goToDetail);
-                            }
-                        });
-
-
-                        goToDetail.putExtra("KEY_EVENTO_LUGAR", ubicacion);
+                        startActivity(goToDetail);
 
                     }
 
