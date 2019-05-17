@@ -32,6 +32,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -174,8 +176,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // Store values at the time of the login attempt.
         String name = mNameView.getText().toString();
         String surname = mSurnameView.getText().toString();
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
         boolean cancel = false;
@@ -207,31 +209,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign up success
-                                Toast.makeText(RegisterActivity.this, "Authentication successfully.",
-                                        Toast.LENGTH_SHORT).show();
-                                finish();
-                                logIn();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Toast.makeText(RegisterActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
             final RegisterBody registerBody = new RegisterBody(name, surname, email, password, passwordConfirm);
             remoteApi.register(registerBody.getNombre(), registerBody.getApellido(), registerBody.getEmail(), registerBody.getContrasenia(), registerBody.getContraseniaConfirmacion()).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                     /*TODO: save token*/
                     if (response.body().getError().toString() != "true"){
-                        goToLogIn();
+                        firebaseRegister(email, password);
+                        logIn();
                     }
                     else{
                         Snackbar.make(mRegisterFormView, "ERROR", Snackbar.LENGTH_LONG)
@@ -248,12 +233,32 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
     }
 
-    private void goToLogIn(){
+    private void firebaseRegister(String email, String password){
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign up success
+                            Toast.makeText(RegisterActivity.this, "Authentication successful.",
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+    }
+
+    /**private void goToLogIn(){
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
+    **/
     private void logIn(){
         Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
