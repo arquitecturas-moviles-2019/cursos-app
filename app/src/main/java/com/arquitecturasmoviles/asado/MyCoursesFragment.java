@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.CursosResponse;
 import com.arquitecturasmoviles.asado.model.Evento;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
 import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
@@ -56,50 +57,25 @@ public class MyCoursesFragment extends Fragment {
         //int courseId = getIntent().getIntExtra("COURSE_ID", 0);
 
         //Sentecia para obtener los cursos
-        //Por ahora hardcodeo - Inicio hardcodeo
         evento = new Evento();
         evento.setLugar("UTN - Facultad Regional San Francisco");
 
-        Curso curso1 = new Curso();
-        curso1.setId("1");
-        curso1.setNombre("Curso de Vue.js");
-        curso1.setDiaHora("1/5/19");
-        Curso curso2 = new Curso();
-        curso2.setId("2");
-        curso2.setNombre("Curso de Redis");
-        curso2.setDiaHora("22/5/19");
-        Curso curso3 = new Curso();
-        curso3.setId("3");
-        curso3.setNombre("Curso de Laravel from Scratch");
-        curso3.setDiaHora("12/6/19");
-
-        listadoCursosDelEvento.add(curso1);
-        listadoCursosDelEvento.add(curso2);
-        listadoCursosDelEvento.add(curso3);
-
-        String [] myCorusesString = {
-                curso1.getNombre(),
-                curso2.getNombre(),
-                curso3.getNombre()
-        };
-        //Fin hardcodeo
-
-        Call<List<Curso>> allCoursesCall = remoteApi.getAllCourses();
-        allCoursesCall.enqueue(new Callback<List<Curso>>() {
+        Call<CursosResponse> allCoursesCall = remoteApi.getAllCourses();
+        allCoursesCall.enqueue(new Callback<CursosResponse>() {
             @Override
-            public void onResponse(Call<List<Curso>> call, Response<List<Curso>> response) {
+            public void onResponse(Call<CursosResponse> call, Response<CursosResponse> response) {
                 String asd = response.body().toString();
                 Snackbar.make(view.findViewById(R.id.myCoursesListView), "OK", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
                 for (Curso curso:
-                        response.body()) {
+                        response.body().getCursos()) {
                     listadoCursosDelEvento.add(curso);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Curso>> call, Throwable t) {
+            public void onFailure(Call<CursosResponse> call, Throwable t) {
                 String asd = t.getMessage();
                 Snackbar.make(view.findViewById(R.id.myCoursesListView), "ERROR", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -111,19 +87,19 @@ public class MyCoursesFragment extends Fragment {
 
         ListView lv = view.findViewById(R.id.myCoursesListView);
 
-        ArrayAdapter<String> lva = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, myCorusesString
-        );
+        /*String myCorusesString = "";
+        ArrayAdapter<String> lva = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, myCorusesString);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Snackbar.make(view, "Se ha presionado el curso de la posición "+id, Snackbar.LENGTH_LONG)
 //                        .show();
-                /*
+
                 Intent intent = new Intent(getContext(), CursosActivity.class);
                 intent.putExtra("COURSE_ID", position);
                 startActivity(intent);
-                */
+
 
 
                 Intent goToDetail = new Intent(getContext(), CourseDetailActivity.class);
@@ -141,7 +117,7 @@ public class MyCoursesFragment extends Fragment {
             }
         });
 
-        lv.setAdapter(lva);
+        lv.setAdapter(lva);*/
         return view;
     }
 
