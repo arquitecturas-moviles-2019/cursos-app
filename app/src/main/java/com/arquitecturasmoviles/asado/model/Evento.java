@@ -1,12 +1,17 @@
 package com.arquitecturasmoviles.asado.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Evento {
 
     private String id;
+    public String KEY_ID = "KEY_EVENTO_ID";
+    @SerializedName("fecha_inicio")
     private String fechaInicio;
+    @SerializedName("fecha_fin")
     private String fechaFin;
     private String descripcion;
     private String lugar;

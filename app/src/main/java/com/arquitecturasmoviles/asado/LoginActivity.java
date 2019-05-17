@@ -277,9 +277,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
                     storeKeyValueOnSharedPreferences("UserToken", response.body().getToken());
-                    Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
+                    Intent myCoursesAndEventsActivity = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
 
-                    startActivity(Cursos);
+                    startActivity(myCoursesAndEventsActivity);
                 }
 
                 @Override
