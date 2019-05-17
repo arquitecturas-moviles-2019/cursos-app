@@ -10,53 +10,56 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:text="Fecha:"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/dateLabel"
-        app:layout_constraintStart_toStartOf="@+id/nameLabel"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginBottom="5dp"
         android:text="Lugar:"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/locationLabel"
-        app:layout_constraintEnd_toEndOf="@+id/textView9"
-        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateLabel" />
 
     <TextView
         android:id="@+id/dateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginBottom="27dp"
         android:text="Default date"
         app:layout_constraintBottom_toTopOf="@+id/textView10"
-        app:layout_constraintEnd_toEndOf="@+id/textView9"
-        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <TextView
         android:id="@+id/locationLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginBottom="32dp"
         android:text="Default location"
         app:layout_constraintBottom_toTopOf="@+id/descriptionLabel"
-        app:layout_constraintStart_toStartOf="@+id/textView10"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <TextView
         android:id="@+id/descriptionLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginBottom="48dp"
         android:text="Default description"
         app:layout_constraintBottom_toTopOf="@+id/inscribeButton"
-        app:layout_constraintStart_toStartOf="@+id/locationLabel"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationLabel" />
 
     <Button
@@ -74,14 +77,38 @@
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="87dp"
         android:layout_marginBottom="19dp"
         android:text="Course Name"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/nameLabel"
+        app:srcCompat="@android:drawable/ic_menu_today" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@android:drawable/ic_menu_mylocation" />
 
 </android.support.constraint.ConstraintLayout>

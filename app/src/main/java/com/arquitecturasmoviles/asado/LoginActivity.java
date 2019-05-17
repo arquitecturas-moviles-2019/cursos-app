@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arquitecturasmoviles.asado.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -66,6 +67,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final String USER_TOKEN_KEY = "UserToken";
+    private static final String USER_ID_KEY = "UserId";
     private RemoteApi remoteApi;
 
     /**
@@ -148,7 +151,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null).
-        if (mAuth.getCurrentUser() != null){
+        boolean tokenExists = !getValueFromSharedPreferences(USER_TOKEN_KEY).equals("");
+        boolean firebaseAlreadyLogged = mAuth.getCurrentUser() != null;
+        if (tokenExists && firebaseAlreadyLogged){
             finish();
             logIn();
         }
@@ -204,6 +209,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         editor.apply();
     }
 
+    private String getValueFromSharedPreferences(String key){
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        return myPrefs.getString(key, "");
+    }
+
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -220,8 +230,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -252,48 +262,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success.
-                                finish();
-                                logIn();
-                                Toast.makeText(LoginActivity.this, "Authentication successfully.",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
             Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
             loginCall.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-
-                    storeKeyValueOnSharedPreferences("UserToken", response.body().getToken());
-                    Intent Cursos = new Intent(getApplicationContext(), CursosActivity.class);
-
-                    startActivity(Cursos);
+                    try {
+                        storeKeyValueOnSharedPreferences(USER_TOKEN_KEY, response.body().getToken());
+                        storeKeyValueOnSharedPreferences(USER_ID_KEY, response.body().getUserid());
+                        firebaseLogin(password, email);
+                    } catch (Error e) {
+                        Toast.makeText(LoginActivity.this, "Authentication failed." + e.toString(),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Snackbar.make(mLoginFormView, "ERROR", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
     private void logIn(){
+        User user = new User();
         Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(user.KEY_ID, getValueFromSharedPreferences(USER_ID_KEY));
         startActivity(intent);
     }
 
@@ -305,6 +303,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
+    }
+
+    private void firebaseLogin(String password, String email) {
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()  {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, "Authentication successful.",
+                                Toast.LENGTH_SHORT).show();
+                        logIn();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
     }
 
     /**

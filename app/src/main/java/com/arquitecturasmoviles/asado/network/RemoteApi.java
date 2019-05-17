@@ -3,6 +3,7 @@ package com.arquitecturasmoviles.asado.network;
 import android.util.Log;
 
 import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.EventosResponse;
 import com.arquitecturasmoviles.asado.model.InscripcionesResponse;
 import com.arquitecturasmoviles.asado.model.LocalidadesResponse;
 import com.arquitecturasmoviles.asado.model.CursosResponse;
@@ -37,6 +38,9 @@ public interface RemoteApi {
 
     @GET("cursos/todos")
     Call<CursosResponse> getAllCourses();
+
+    @GET("eventos/todos")
+    Call<EventosResponse> getAllEvents();
 
     @GET("localidades/todas")
     Call<LocalidadesResponse> getAllCities();

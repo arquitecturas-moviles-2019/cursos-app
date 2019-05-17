@@ -22,6 +22,7 @@ public class Curso{
 
     private String duracion;
 
+    @SerializedName("evento_id")
     private String eventoId;
 
     private String disertante;
