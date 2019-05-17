@@ -23,11 +23,11 @@ import retrofit2.Response;
 
 public class CursosActivity extends AppCompatActivity {
 
-    ListView listadoDondeSeVisualiza;
-    ArrayList<Curso> listadoCursosDelEvento = new ArrayList<>();
+    ListView coursesListView;
+    ArrayList<Curso> cursosList = new ArrayList<>();
     String idEvento;
-    String ubicacion;
-    Evento evento;
+    String eventoLugar;
+    Evento evento = new Evento(); //Evento vacio para usar sus keys
 
     private RemoteApi remoteApi;
 
@@ -38,11 +38,11 @@ public class CursosActivity extends AppCompatActivity {
 
         remoteApi = RetrofitClientInstance.getRetrofitInstance().create(RemoteApi.class);
 
-        listadoDondeSeVisualiza = findViewById(R.id.myCoursesListView);
-        Intent intencion = getIntent();
-        Bundle extras = intencion.getExtras();
-        idEvento = getIntent().getStringExtra("idEvento");
-        evento = new Evento();
+        coursesListView = findViewById(R.id.myCoursesListView);
+
+        idEvento = getIntent().getStringExtra(evento.KEY_ID);
+        eventoLugar = getIntent().getStringExtra(evento.KEY_LUGAR);
+
         cargarCursosDelEvento();
     }
 
@@ -55,41 +55,31 @@ public class CursosActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.myCoursesListView), "OK", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                listadoCursosDelEvento = response.body().getCursos();
+                //Solo agregar los que correspondan al evento
+                for (Curso curso:
+                        response.body().getCursos()) {
+                    if (curso.getEventoId().equals(idEvento)) {
+                        cursosList.add(curso);
+                    }
+                }
 
-                AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext(), evento.getLugar());
-                listadoDondeSeVisualiza.setAdapter(adaptador);
-                listadoDondeSeVisualiza.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                AdaptCurseListActivity adaptador = new AdaptCurseListActivity(cursosList, getApplicationContext(), evento.getLugar());
+                coursesListView.setAdapter(adaptador);
+                coursesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
 
+                        Curso selectedCourse = cursosList.get(position);
 
-                        AdaptCurseListActivity adaptador = new AdaptCurseListActivity(listadoCursosDelEvento, getApplicationContext(), ubicacion);
-                        listadoDondeSeVisualiza.setAdapter(adaptador);
+                        goToDetail.putExtra(selectedCourse.KEY_ID, selectedCourse.getId());
+                        goToDetail.putExtra(selectedCourse.KEY_NOMBRE, selectedCourse.getNombre());
+                        goToDetail.putExtra(selectedCourse.KEY_DESCRIPCION, selectedCourse.getDescripcion());
+                        goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
 
-                        listadoDondeSeVisualiza.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent goToDetail = new Intent(getApplicationContext(), CourseDetailActivity.class);
+                        goToDetail.putExtra(evento.KEY_LUGAR, eventoLugar);
 
-
-                                Curso selectedCourse = listadoCursosDelEvento.get(position);
-
-
-                                goToDetail.putExtra(selectedCourse.KEY_ID, selectedCourse.getId());
-                                goToDetail.putExtra(selectedCourse.KEY_NOMBRE, selectedCourse.getNombre());
-                                goToDetail.putExtra(selectedCourse.KEY_DESCRIPCION, selectedCourse.getDescripcion());
-                                goToDetail.putExtra(selectedCourse.KEY_DIA_HORA, selectedCourse.getDiaHora());
-
-                                goToDetail.putExtra(evento.KEY_LUGAR, evento.getLugar());
-
-                                startActivity(goToDetail);
-                            }
-                        });
-
-
-                        goToDetail.putExtra("KEY_EVENTO_LUGAR", ubicacion);
+                        startActivity(goToDetail);
 
                     }
 
