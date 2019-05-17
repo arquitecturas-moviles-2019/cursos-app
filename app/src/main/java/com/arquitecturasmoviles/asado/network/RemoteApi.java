@@ -37,4 +37,10 @@ public interface RemoteApi {
 
     @GET("cursos/todos")
     Call<CursosResponse> getAllCourses();
+
+    @GET("localidades/todas")
+    Call<LocalidadesResponse> getAllCities();
+
+    @GET("inscripciones/todos")
+    Call<InscripcionesResponse> getAllInscriptions();
 }
