@@ -6,6 +6,7 @@ import java.util.Map;
 public class User {
 
     private String id;
+    public String KEY_ID = "KEY_USER_ID";
     private String nombre;
     private String apellido;
     private Object dni;
