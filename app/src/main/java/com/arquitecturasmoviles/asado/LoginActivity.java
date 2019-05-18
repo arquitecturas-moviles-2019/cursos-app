@@ -3,6 +3,7 @@ package com.arquitecturasmoviles.asado;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -96,6 +97,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        mAuth = FirebaseAuth.getInstance();
+
+
+        if (intent.getBooleanExtra("logout", false)){
+            removeValueFromSharedPreferences(USER_ID_KEY);
+            removeValueFromSharedPreferences(USER_TOKEN_KEY);
+            mAuth.signOut();
+        }
+
         /*Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
         startActivity(intent);*/
 
@@ -104,7 +115,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
 
 
         // Crear conexión al servicio REST
@@ -154,7 +164,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean tokenExists = !getValueFromSharedPreferences(USER_TOKEN_KEY).equals("");
         boolean firebaseAlreadyLogged = mAuth.getCurrentUser() != null;
         if (tokenExists && firebaseAlreadyLogged){
-            finish();
             logIn();
         }
     }
@@ -212,6 +221,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private String getValueFromSharedPreferences(String key){
         SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         return myPrefs.getString(key, "");
+    }
+
+    private void removeValueFromSharedPreferences(String key){
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = myPrefs.edit();
+        editor.remove(key);
+        editor.apply();
     }
 
 
@@ -454,11 +470,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
+            if (!success) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+            } else {
+//                finish();
+                mEmailView.setText("");
+                mPasswordView.setText("");
             }
         }
 
