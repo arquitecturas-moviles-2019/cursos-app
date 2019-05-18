@@ -70,7 +70,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
     private static final String USER_TOKEN_KEY = "UserToken";
     private static final String USER_ID_KEY = "UserId";
-    public static final String PREFS_NAME = "asado_Settings";
     private RemoteApi remoteApi;
 
     /**
@@ -471,11 +470,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
+            if (!success) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+            } else {
+//                finish();
             }
         }
 
