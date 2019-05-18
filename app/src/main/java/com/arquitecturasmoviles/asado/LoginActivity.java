@@ -475,6 +475,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 mPasswordView.requestFocus();
             } else {
 //                finish();
+                mEmailView.setText("");
+                mPasswordView.setText("");
             }
         }
 
