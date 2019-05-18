@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.arquitecturasmoviles.asado.model.Curso;
 import com.arquitecturasmoviles.asado.model.CursosIdResponse;
 import com.arquitecturasmoviles.asado.model.CursosResponse;
+import com.arquitecturasmoviles.asado.model.User;
 import com.arquitecturasmoviles.asado.model.UserInscriptionsResponse;
 import com.arquitecturasmoviles.asado.network.RemoteApi;
 import com.arquitecturasmoviles.asado.network.RetrofitClientInstance;
@@ -48,7 +49,9 @@ public class MyCoursesFragment extends Fragment {
 
         remoteApi = RetrofitClientInstance.getRetrofitInstance().create(RemoteApi.class);
 
-        Call<UserInscriptionsResponse> userInscriptionsCall = remoteApi.getCoursesByUserId("7"); //TODO USAR EL DE JACK
+        User user = new User();
+        String userId = getActivity().getIntent().getStringExtra(user.KEY_ID);
+        Call<UserInscriptionsResponse> userInscriptionsCall = remoteApi.getCoursesByUserId(userId);
         userInscriptionsCall.enqueue(new Callback<UserInscriptionsResponse>() {
             @Override
             public void onResponse(Call<UserInscriptionsResponse> call, Response<UserInscriptionsResponse> response) {
