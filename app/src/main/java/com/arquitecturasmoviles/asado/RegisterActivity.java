@@ -137,11 +137,19 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        Button mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
-        mEmailSignUpButton.setOnClickListener(new OnClickListener() {
+        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptRegister();
+            }
+        });
+
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToLogInActivity();
             }
         });
 
@@ -154,7 +162,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         super.onStart();
         // Check if user is signed in (non-null).
         if (mAuth.getCurrentUser() != null){
-            finish();
             logIn();
         }
     }
@@ -253,12 +260,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     }
 
-    /**private void goToLogIn(){
+    private void goToLogInActivity(){
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-    **/
+
     private void logIn(){
         Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
