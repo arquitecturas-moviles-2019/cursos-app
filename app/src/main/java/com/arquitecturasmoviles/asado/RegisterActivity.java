@@ -161,10 +161,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null).
-        if (mAuth.getCurrentUser() != null) {
-            logIn();
-        }
     }
 
     /**
@@ -225,14 +221,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     try {
                         firebaseRegister(email, password);
                     } catch (Exception e) {
-                        Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                        Toast.makeText(RegisterActivity.this, "Registration failed.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                    Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                    Toast.makeText(RegisterActivity.this, "Registration failed.",
                             Toast.LENGTH_SHORT).show();
                 }
             });
@@ -247,16 +243,16 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign up success
-                            Toast.makeText(RegisterActivity.this, "Authentication successful.",
+                            Toast.makeText(RegisterActivity.this, "Registration successful.",
                                     Toast.LENGTH_SHORT).show();
-                            logIn();
+                            goToLogInActivity();
                         } else {
                             // If sign up fails, display a message to the user.
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                 Toast.makeText(RegisterActivity.this, "User already registered",
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                Toast.makeText(RegisterActivity.this, "Registration failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
