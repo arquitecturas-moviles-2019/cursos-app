@@ -1,9 +1,15 @@
 package com.arquitecturasmoviles.asado;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,6 +23,11 @@ import com.arquitecturasmoviles.asado.ui.main.SectionsPagerAdapter;
 import java.util.ArrayList;
 
 public class MyCoursesAndEventsActivity extends AppCompatActivity {
+
+    private static final String USER_TOKEN_KEY = "UserToken";
+    private static final String USER_ID_KEY = "UserId";
+
+    FragmentManager fm = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +57,11 @@ public class MyCoursesAndEventsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
-            Intent intent = new Intent(MyCoursesAndEventsActivity.this, LoginActivity.class);
-            startActivity(intent);
+            LogoutDialogFragment logoutDialog = new LogoutDialogFragment();
+            logoutDialog.show(fm, "");
         }
         return true;
     }
 
 }
+

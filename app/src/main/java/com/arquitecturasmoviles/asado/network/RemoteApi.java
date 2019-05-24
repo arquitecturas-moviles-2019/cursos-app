@@ -12,6 +12,7 @@ import com.arquitecturasmoviles.asado.model.LoginResponse;
 import com.arquitecturasmoviles.asado.model.RegisterBody;
 import com.arquitecturasmoviles.asado.model.RegisterResponse;
 import com.arquitecturasmoviles.asado.model.User;
+import com.arquitecturasmoviles.asado.model.UserInscriptionsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface RemoteApi {
 
@@ -38,6 +40,9 @@ public interface RemoteApi {
 
     @GET("cursos/todos")
     Call<CursosResponse> getAllCourses();
+
+    @GET("inscripciones/{user_id}")
+    Call<UserInscriptionsResponse> getCoursesByUserId(@Path("user_id") String user_id);
 
     @GET("eventos/todos")
     Call<EventosResponse> getAllEvents();

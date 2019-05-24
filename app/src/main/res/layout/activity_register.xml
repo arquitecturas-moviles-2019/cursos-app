@@ -39,6 +39,7 @@
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/prompt_name"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
@@ -56,6 +57,7 @@
                     android:id="@+id/surname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/prompt_surname"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
@@ -122,8 +124,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Registrar"
-                android:textStyle="bold"/>
+                android:text="@string/action_sign_up"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/email_sign_in_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_sign_in_short"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

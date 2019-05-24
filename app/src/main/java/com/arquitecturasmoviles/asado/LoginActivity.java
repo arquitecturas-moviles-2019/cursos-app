@@ -3,6 +3,7 @@ package com.arquitecturasmoviles.asado;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -96,6 +97,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        mAuth = FirebaseAuth.getInstance();
+
+
+        if (intent.getBooleanExtra("logout", false)){
+            removeValueFromSharedPreferences(USER_ID_KEY);
+            removeValueFromSharedPreferences(USER_TOKEN_KEY);
+            mAuth.signOut();
+        }
+
         /*Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
         startActivity(intent);*/
 
@@ -104,7 +115,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
 
 
         // Crear conexión al servicio REST
@@ -127,19 +137,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+
+        Button mRegisterButton = (Button) findViewById(R.id.email_sign_up_button);
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
+                goToRegisterActivity();
             }
         });
 
@@ -154,7 +164,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean tokenExists = !getValueFromSharedPreferences(USER_TOKEN_KEY).equals("");
         boolean firebaseAlreadyLogged = mAuth.getCurrentUser() != null;
         if (tokenExists && firebaseAlreadyLogged){
-            finish();
             logIn();
         }
     }
@@ -212,6 +221,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private String getValueFromSharedPreferences(String key){
         SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         return myPrefs.getString(key, "");
+    }
+
+    private void removeValueFromSharedPreferences(String key){
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = myPrefs.edit();
+        editor.remove(key);
+        editor.apply();
     }
 
 
@@ -292,6 +308,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(user.KEY_ID, getValueFromSharedPreferences(USER_ID_KEY));
+        startActivity(intent);
+    }
+
+    private void goToRegisterActivity(){
+        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -454,11 +476,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
+            if (!success) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+            } else {
+//                finish();
+                mEmailView.setText("");
+                mPasswordView.setText("");
             }
         }
 
