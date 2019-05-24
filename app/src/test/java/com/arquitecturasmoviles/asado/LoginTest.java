@@ -20,6 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 
 public class LoginTest {
@@ -42,7 +43,7 @@ public class LoginTest {
 
     @Test
     public void testServiceLogin() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
+        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -66,7 +67,7 @@ public class LoginTest {
 
     @Test
     public void testUserLogin() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
+        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -76,7 +77,7 @@ public class LoginTest {
                         Boolean error = responseBody.getError();
                         if (error.equals(false)) {
                             testSuccess = true;
-                        }else {
+                        } else {
                             testSuccess = false;
                         }
                     } catch (Exception e) {
@@ -99,38 +100,44 @@ public class LoginTest {
         assertEquals(true, testSuccess);
     }
 
-//    @Test
-//    public void testUserLoginToken() throws InterruptedException {
-//        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
-//        loginCall.enqueue(new Callback<LoginResponse>() {
-//            @Override
-//            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-//                if (response.code() == 200) {
-//                    try {
-//                        LoginResponse responseBody = response.body();
-//                        String token = responseBody.getToken();
-//                        if (token.length() != 0) {
-//                            testSuccess = true;
-//                        }else {
-//                            testSuccess = false;
-//                        }
-//                    } catch (Exception e) {
-//                        testSuccess = false;
-//                    }
-//                } else {
-//                    testSuccess = false;
-//                }
-//                countDownLatch.countDown();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LoginResponse> call, Throwable t) {
-//                testSuccess = false;
-//                countDownLatch.countDown();
-//            }
-//
-//        });
-//        countDownLatch.await();
-//        assertEquals(true, testSuccess);
-//    }
+
+    @Test
+    public void testUserLoginBody() throws InterruptedException {
+        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
+        loginCall.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.code() == 200) {
+                    try {
+                        LoginResponse responseBody = response.body();
+                        if (
+                                responseBody.getMensaje().equals("Exito") &&
+                                        responseBody.getError().equals(false)
+                        ) {
+                            testSuccess = true;
+                        } else {
+                            testSuccess = false;
+                        }
+
+                    } catch (Exception e) {
+                        testSuccess = false;
+                    }
+                } else {
+                    testSuccess = false;
+                }
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                testSuccess = false;
+                countDownLatch.countDown();
+            }
+
+        });
+        countDownLatch.await();
+        assertEquals(true, testSuccess);
+
+
+    }
 }

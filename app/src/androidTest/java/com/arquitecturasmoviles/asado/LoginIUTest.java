@@ -37,10 +37,6 @@ public class LoginIUTest {
 
             onView(withId(R.id.email_sign_in_button)).perform(click());
 
-
-//            intended(hasComponent(MyCoursesAndEventsActivity.class.getName()));
-//            Intents.release();
-
         }
 }
 
