@@ -124,9 +124,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-<<<<<<< HEAD
-                android:text="Registrar"
-=======
                 android:text="@string/action_sign_up"
                 android:textStyle="bold" />
 
@@ -136,7 +133,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/action_sign_in_short"
->>>>>>> e5ed2ee1fd456b4f452a30baa45121f291ac8666
                 android:textStyle="bold" />
 
         </LinearLayout>
