@@ -43,7 +43,7 @@ public class LoginTest {
 
     @Test
     public void testServiceLogin() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
+        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -67,7 +67,7 @@ public class LoginTest {
 
     @Test
     public void testUserLogin() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
+        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -77,7 +77,7 @@ public class LoginTest {
                         Boolean error = responseBody.getError();
                         if (error.equals(false)) {
                             testSuccess = true;
-                        }else {
+                        } else {
                             testSuccess = false;
                         }
                     } catch (Exception e) {
@@ -101,25 +101,22 @@ public class LoginTest {
     }
 
 
-
     @Test
     public void testUserLoginBody() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email,password));
+        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.code() == 200) {
                     try {
                         LoginResponse responseBody = response.body();
-//                        responseIsCorrect(responseBody);
-                        if(
+                        if (
                                 responseBody.getMensaje().equals("Exito") &&
-                                responseBody.getError().equals(false)
-//                                        && responseBody.getUserid().equals("7")
+                                        responseBody.getError().equals(false)
                         ) {
                             testSuccess = true;
-                        }else {
-                            testSuccess= false;
+                        } else {
+                            testSuccess = false;
                         }
 
                     } catch (Exception e) {
@@ -141,18 +138,6 @@ public class LoginTest {
         countDownLatch.await();
         assertEquals(true, testSuccess);
 
-
-    }
-
-    private void responseIsCorrect(LoginResponse responseBody) {
-        if(responseBody.getMensaje().equals("Exito") &&
-                responseBody.getError().equals(false) &&
-                responseBody.getUserid().equals("7")
-            ) {
-            testSuccess = true;
-        }else {
-            testSuccess= false;
-        }
 
     }
 }
