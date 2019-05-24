@@ -8,6 +8,10 @@
     <string name="action_sign_up">Register</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="change_to_login_text">Already registered?</string>
+    <string name="change_to_register_text">Don\'t have an account yet?</string>
+    <string name="change_to_login_link"><a href="">Sign in</a></string>
+    <string name="change_to_register_link"><a href="">Register</a></string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>

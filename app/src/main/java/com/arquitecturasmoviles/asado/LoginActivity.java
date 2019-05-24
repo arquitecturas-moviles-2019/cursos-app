@@ -145,8 +145,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mRegisterButton = (Button) findViewById(R.id.email_sign_up_button);
-        mRegisterButton.setOnClickListener(new OnClickListener() {
+        TextView mRegisterLink = (TextView) findViewById(R.id.email_sign_up_link);
+        mRegisterLink.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToRegisterActivity();
