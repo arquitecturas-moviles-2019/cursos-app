@@ -30,6 +30,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 
 import com.arquitecturasmoviles.asado.model.RegisterBody;
 import com.arquitecturasmoviles.asado.model.RegisterResponse;
@@ -71,6 +79,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * Keep track of the login task to ensure we can cancel it if requested.
      */
 
+    // Initialize Firebase Auth
+    private FirebaseAuth mAuth;
 
     // UI references.
     private EditText mNameView;
@@ -86,6 +96,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_register);
+
+        mAuth = FirebaseAuth.getInstance();
 
         // Crear conexión al servicio REST
         mRestAdapter = new Retrofit.Builder()
@@ -126,16 +138,29 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        Button mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
-        mEmailSignUpButton.setOnClickListener(new OnClickListener() {
+        Button mRegisterButton = (Button) findViewById(R.id.email_sign_up_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptRegister();
             }
         });
 
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToLogInActivity();
+            }
+        });
+
         mRegisterFormView = findViewById(R.id.register_form);
         mProgressView = findViewById(R.id.register_progress);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     /**
@@ -153,10 +178,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mPasswordConfirmView.setError(null);
 
         // Store values at the time of the login attempt.
-        String name = mNameView.getText().toString();
-        String surname = mSurnameView.getText().toString();
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String name = mNameView.getText().toString().trim();
+        String surname = mSurnameView.getText().toString().trim();
+        final String email = mEmailView.getText().toString().trim();
+        final String password = mPasswordView.getText().toString();
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
         boolean cancel = false;
@@ -193,24 +218,60 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                     /*TODO: save token*/
-                    if (response.body().getError().toString() != "true"){
-                        Intent Login = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(Login);
-                    }
-                    else{
-                        Snackbar.make(mRegisterFormView, "ERROR", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                    try {
+                        firebaseRegister(email, password);
+                    } catch (Exception e) {
+                        Toast.makeText(RegisterActivity.this, "Registration failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                    Snackbar.make(mRegisterFormView, "ERROR", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Toast.makeText(RegisterActivity.this, "Registration failed.",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
+            showProgress(false);    //delete this line
         }
     }
+
+    private void firebaseRegister(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign up success
+                            Toast.makeText(RegisterActivity.this, "Registration successful.",
+                                    Toast.LENGTH_SHORT).show();
+                            goToLogInActivity();
+                        } else {
+                            // If sign up fails, display a message to the user.
+                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                Toast.makeText(RegisterActivity.this, "User already registered",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Registration failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void goToLogInActivity() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void logIn() {
+        Intent intent = new Intent(getApplicationContext(), MyCoursesAndEventsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return true;

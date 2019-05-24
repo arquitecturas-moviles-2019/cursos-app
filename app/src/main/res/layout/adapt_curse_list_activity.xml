@@ -11,14 +11,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="26dp" />
+        app:layout_constraintGuide_begin="7dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="132dp" />
+        app:layout_constraintGuide_begin="107dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
@@ -60,8 +60,8 @@
 
     <ImageView
         android:id="@+id/iv_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="location_image"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -78,8 +78,8 @@
 
     <ImageView
         android:id="@+id/iv_calendar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="date_image"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"

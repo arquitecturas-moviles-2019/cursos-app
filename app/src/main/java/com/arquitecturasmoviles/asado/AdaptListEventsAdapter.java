@@ -8,31 +8,29 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.arquitecturasmoviles.asado.model.Curso;
+import com.arquitecturasmoviles.asado.model.Evento;
 
 import java.util.ArrayList;
 
-public class AdaptCurseListActivity extends BaseAdapter {
+public class AdaptListEventsAdapter extends BaseAdapter {
+
     Context context;
-    ArrayList<Curso>listadoCursosDelEvento;
-    String lugar;
+    ArrayList<Evento> eventList;
 
-    public AdaptCurseListActivity(ArrayList<Curso>listadoCursosDelEvento, Context context, String lugar){
-        this.listadoCursosDelEvento = listadoCursosDelEvento;
+    public AdaptListEventsAdapter(ArrayList<Evento> eventList, Context context){
+        this.eventList = eventList;
         this.context = context;
-        this.lugar = lugar;
     }
-
 
     @Override
     public int getCount() {
-        return listadoCursosDelEvento.size();
+        return eventList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listadoCursosDelEvento.get(position);
+        return eventList.get(position);
     }
 
     @Override
@@ -46,19 +44,19 @@ public class AdaptCurseListActivity extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapt_curse_list_activity, parent, false);
         }
 
-        Curso currentCurse = (Curso) getItem(position);
+        Evento currentEvent = (Evento) getItem(position);
 
         ImageView iv_calendar = convertView.findViewById(R.id.iv_calendar);
         ImageView iv_location = convertView.findViewById(R.id.iv_location);
 
 
-        TextView tv_nombreCurso = convertView.findViewById(R.id.tv_tituloAdaptadorCurso);
-        TextView tv_fecha = convertView.findViewById(R.id.tv_AdaptadorCursoFechaHora);
-        TextView tv_descripcion = convertView.findViewById(R.id.tv_adaptadorCursoLugar);
+        TextView tv_nombreEvento = convertView.findViewById(R.id.tv_tituloAdaptadorCurso);
+        TextView tv_descripcion = convertView.findViewById(R.id.tv_AdaptadorCursoFechaHora);
+        TextView tv_lugar = convertView.findViewById(R.id.tv_adaptadorCursoLugar);
 
-        tv_nombreCurso.setText(currentCurse.getNombre());
-        tv_fecha.setText(currentCurse.getDiaHora());
-        tv_descripcion.setText(currentCurse.getDescripcion());
+        tv_nombreEvento.setText(currentEvent.getNombre());
+        tv_descripcion.setText(currentEvent.getDescripcion());
+        tv_lugar.setText(currentEvent.getLugar());
 
         return convertView;
     }
