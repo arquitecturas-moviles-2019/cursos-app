@@ -43,7 +43,7 @@ public class LoginTest {
 
     @Test
     public void testServiceLogin() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
+        Call<LoginResponse> loginCall = remoteApi.login(email, password);
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -67,7 +67,7 @@ public class LoginTest {
 
     @Test
     public void testUserLogin() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
+        Call<LoginResponse> loginCall = remoteApi.login(email, password);
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -103,7 +103,7 @@ public class LoginTest {
 
     @Test
     public void testUserLoginBody() throws InterruptedException {
-        Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
+        Call<LoginResponse> loginCall = remoteApi.login(email, password);
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {

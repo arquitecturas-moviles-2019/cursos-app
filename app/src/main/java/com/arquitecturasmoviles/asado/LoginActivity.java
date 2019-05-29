@@ -280,14 +280,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
-            Call<LoginResponse> loginCall = remoteApi.login(new LoginBody(email, password));
+            Call<LoginResponse> loginCall = remoteApi.login(email, password);
             loginCall.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     try {
+                        firebaseLogin(password, email);
+
                         storeKeyValueOnSharedPreferences(USER_TOKEN_KEY, response.body().getToken());
                         storeKeyValueOnSharedPreferences(USER_ID_KEY, response.body().getUserid());
-                        firebaseLogin(password, email);
                     } catch (Error e) {
                         Toast.makeText(LoginActivity.this, "Authentication failed." + e.toString(),
                                 Toast.LENGTH_SHORT).show();
