@@ -55,7 +55,10 @@ public class MyCoursesFragment extends Fragment {
         userInscriptionsCall.enqueue(new Callback<UserInscriptionsResponse>() {
             @Override
             public void onResponse(Call<UserInscriptionsResponse> call, Response<UserInscriptionsResponse> response) {
-                ArrayList<CursosIdResponse> cursosIdResponse = response.body().getCursos();
+                ArrayList<CursosIdResponse> cursosIdResponse = null;
+                if (response.body() != null) {
+                    cursosIdResponse = response.body().getCursos();
+                }
                 final ArrayList<String> cursosId = new ArrayList<>();
 
                 if (cursosIdResponse == null) {

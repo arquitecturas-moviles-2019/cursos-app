@@ -27,8 +27,9 @@ import retrofit2.http.Path;
 
 public interface RemoteApi {
 
+    @FormUrlEncoded
     @POST("usuarios/login")
-    Call<LoginResponse> login(@Body LoginBody loginBody);
+    Call<LoginResponse> login(@Field("email") String email, @Field("contrasenia") String password);
 
     @FormUrlEncoded
     @POST("usuarios/nuevo")
